@@ -1,26 +1,31 @@
 package main;
 
+import java.util.ArrayList;
+
 public class Restaurant implements Comparable<Restaurant> {
 	private final String name;
 	private final int id;
 	private final int zip;
 	private final double latitude;
 	private final double longitude;
-	private Inspection[] inspections;
-	private Crime[] crimes;
+	private ArrayList<Inspection> inspections;
+	private ArrayList<Crime> crimes; 
 	private double foodSafetyScore;
 	private double neighborhoodSafetyScore;
 	private double overallScore;
+	private boolean closed;
 
 	public Restaurant(String name, int id, int zip, double latitude, double longitude) {
-		super();
 		this.name = name;
 		this.id = id;
 		this.zip = zip;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.closed = false; 
+		this.crimes = new ArrayList<Crime>();
+		this.inspections = new ArrayList<Inspection>();
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -48,7 +53,23 @@ public class Restaurant implements Comparable<Restaurant> {
 	public double getOverallScore() {
 		return overallScore;
 	}
-
+	
+	public boolean isClosed() {
+		return isClosed();
+	}
+	
+	
+	public void calculateFoodSafetyScore() {
+		//TODO
+//		foodSafetyScore = 
+	}
+	
+	public void calculateNeighborhoodSafetyScore() {
+		//TODO
+//		NeighborhoodSafetyScore =  
+	}
+	
+	
 	public int compareTo(Restaurant other) {
 		return Double.compare(overallScore, other.overallScore);
 	}
