@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: DineSafeChicago
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: tianyizhang
+Implementation-Vendor-Id: ca.mcmcaster.2xb3l02g06
+Build-Jdk: 1.8.0_131
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/DineSafeChicago
+Created-By: Maven Integration for Eclipse
+
