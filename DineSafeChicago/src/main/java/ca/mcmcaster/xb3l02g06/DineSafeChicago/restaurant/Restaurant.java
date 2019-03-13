@@ -22,6 +22,7 @@ public class Restaurant implements Comparable<Restaurant> {
 	private Long id;
 	private String name;
 	private int zip;
+	private int licenseNum;
 	private double latitude;
 	private double longitude;
 	private double foodSafetyScore;
@@ -36,7 +37,7 @@ public class Restaurant implements Comparable<Restaurant> {
 	protected Restaurant() {
 	}
 
-	public Restaurant(String name, int zip, double latitude, double longitude) {
+	public Restaurant(String name, int zip, double latitude, double longitude, int licenseNum) {
 		this.name = name;
 		this.zip = zip;
 		this.latitude = latitude;
@@ -57,7 +58,7 @@ public class Restaurant implements Comparable<Restaurant> {
 		return inspections;
 	}
 
-
+	
 	public String getName() {
 		return name;
 	}
@@ -72,6 +73,15 @@ public class Restaurant implements Comparable<Restaurant> {
 
 	public void setZip(int zip) {
 		this.zip = zip;
+	}
+
+	
+	public int getLicenseNum() {
+		return licenseNum;
+	}
+
+	public void setLicenseNum(int licenseNum) {
+		this.licenseNum = licenseNum;
 	}
 
 	public double getLatitude() {
