@@ -26,6 +26,7 @@ public class Inspection {
 	private Restaurant restaurant;
 
 	private String result;
+	@Column(length=8192)
 	private String violation;
 	private Date time;
 	

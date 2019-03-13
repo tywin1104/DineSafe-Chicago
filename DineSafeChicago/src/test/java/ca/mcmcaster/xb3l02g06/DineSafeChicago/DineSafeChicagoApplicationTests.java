@@ -1,5 +1,7 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago;
 
+import static org.assertj.core.api.Assertions.not;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import au.com.bytecode.opencsv.CSVReader;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @RunWith(SpringRunner.class)
@@ -36,9 +40,9 @@ public class DineSafeChicagoApplicationTests {
 		List<String[]> allRows;
 		try {
 			allRows = reader.readAll();
-			for (String[] temp : allRows.subList(1, allRows.size())) {
+			for (String[] temp : allRows) {
 				String name = temp[1]; 
-				int licenseId = Integer.parseInt(temp[2]);
+				int licenseNum = Integer.parseInt(temp[2]);
 				String address = temp[4];
 				int zip = Integer.parseInt(temp[5]);
 				String dateStr = temp[6];
@@ -46,26 +50,18 @@ public class DineSafeChicagoApplicationTests {
 				String violation = temp[8]; 
 				double latitude = Double.parseDouble(temp[9]);
 				double longitude = Double.parseDouble(temp[10]);
-				System.out.println(latitude);
+
+				Restaurant restaurant = restaurantRepo.findByLicenseNum(licenseNum);
+				if(restaurant == null) {
+					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum);
+				} 
+				Inspection inspection = new Inspection(result, violation, dateStr);
+				restaurant.addInspection(inspection);
+				restaurantRepo.save(restaurant);
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
- 
-
-//				Restaurant newRestaurant = new Restaurant(name, zip, latitude, longitude, licenseId);
-//		Restaurant r1 = new Restaurant("asd", 100, 12.2, 12.2, 10002);
-//		Inspection i1 = new Inspection("pass", "no comment", "11/04/1998");
-//		System.out.println(r1);
-//		System.out.println(i1);
-//		Inspection i2 = new Inspection("pass with condition", "no comment", "11/04/2019");
-//		r1.addInspection(i1);
-//		r1.addInspection(i2);
-//		restaurantRepo.save(r1); 
-//		for(Inspection ins: r1.getInspections()) {
-//			System.out.println(ins);
-//		}
-//		System.out.println(i1.getRestaurant());
+		}	
 	}
 }

@@ -22,6 +22,7 @@ public class Restaurant implements Comparable<Restaurant> {
 	private Long id;
 	private String name;
 	private int zip;
+	@Column(unique=true)
 	private int licenseNum;
 	private double latitude;
 	private double longitude;
@@ -43,6 +44,7 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.closed = false;
+		this.licenseNum = licenseNum;
 		this.foodSafetyScore = 0;
 		this.neighborhoodSafetyScore = 0;
 	}
