@@ -22,27 +22,28 @@ public class Restaurant implements Comparable<Restaurant> {
 	private Long id;
 	private String name;
 	private int zip;
-	@Column(unique=true)
+	@Column(unique = true)
 	private int licenseNum;
 	private double latitude;
 	private double longitude;
+	private String address;
 	private double foodSafetyScore;
 	private double neighborhoodSafetyScore;
 	private double overallScore;
 	private boolean closed;
 
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Inspection> inspections; 
-	
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Inspection> inspections;
 
 	protected Restaurant() {
 	}
-
-	public Restaurant(String name, int zip, double latitude, double longitude, int licenseNum) {
+ 
+	public Restaurant(String name, int zip, double latitude, double longitude, int licenseNum, String address) {
 		this.name = name;
 		this.zip = zip;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.address = address;
 		this.closed = false;
 		this.licenseNum = licenseNum;
 		this.foodSafetyScore = 0;
@@ -50,17 +51,16 @@ public class Restaurant implements Comparable<Restaurant> {
 	}
 
 	public void addInspection(Inspection ins) {
-		if(inspections == null)
+		if (inspections == null)
 			inspections = new ArrayList<Inspection>();
 		inspections.add(ins);
 		ins.setRestaurant(this);
-	}	
-	
+	}
+
 	public List<Inspection> getInspections() {
 		return inspections;
 	}
 
-	
 	public String getName() {
 		return name;
 	}
@@ -77,7 +77,6 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.zip = zip;
 	}
 
-	
 	public int getLicenseNum() {
 		return licenseNum;
 	}
@@ -100,6 +99,14 @@ public class Restaurant implements Comparable<Restaurant> {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public double getFoodSafetyScore() {
