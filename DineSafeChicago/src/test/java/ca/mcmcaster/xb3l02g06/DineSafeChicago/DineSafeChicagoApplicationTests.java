@@ -41,20 +41,20 @@ public class DineSafeChicagoApplicationTests {
 		try {
 			allRows = reader.readAll();
 			for (String[] temp : allRows) {
-				String name = temp[1]; 
+				String name = temp[1];
 				int licenseNum = Integer.parseInt(temp[2]);
 				String address = temp[4];
 				int zip = Integer.parseInt(temp[5]);
 				String dateStr = temp[6];
 				String result = temp[7];
-				String violation = temp[8]; 
+				String violation = temp[8];
 				double latitude = Double.parseDouble(temp[9]);
 				double longitude = Double.parseDouble(temp[10]);
 
 				Restaurant restaurant = restaurantRepo.findByLicenseNum(licenseNum);
-				if(restaurant == null) {
-					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum);
-				} 
+				if (restaurant == null) {
+					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum, address);
+				}
 				Inspection inspection = new Inspection(result, violation, dateStr);
 				restaurant.addInspection(inspection);
 				restaurantRepo.save(restaurant);
@@ -62,6 +62,6 @@ public class DineSafeChicagoApplicationTests {
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 }
