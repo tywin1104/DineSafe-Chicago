@@ -1,6 +1,9 @@
 package main;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
+import java.util.Date;
+
+import main.Inspection.ResultT;
 
 public class Restaurant implements Comparable<Restaurant> {
 	private final String name;
@@ -24,6 +27,10 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.closed = false; 
 		this.crimes = new ArrayList<Crime>();
 		this.inspections = new ArrayList<Inspection>();
+	}
+	
+	public void addInspection (Inspection inspection) {
+		this.inspections.add(inspection);
 	}
 	
 	public String getName() {
@@ -60,8 +67,74 @@ public class Restaurant implements Comparable<Restaurant> {
 	
 	
 	public void calculateFoodSafetyScore() {
+		double foodSafetyScore = 0;
+		double RECENT_INSPECTION = 20;
+		double CONSISTENCY = 20;
+		double INSPECTION_DETAILS = 60;
+		
+		// sort the inspection array
+		sortInspections();
+		
+		// 20%: recent inspection
+		if(recentInspection(this.inspections.get(0))) {
+			foodSafetyScore += RECENT_INSPECTION;
+		}
+		
+		// 20%: pass rate (consistency)
+		foodSafetyScore += (CONSISTENCY*passRate(this.inspections));
+		
+		// 60%: latest inspections (up to five inspections)
+		switch(this.inspections.size())
+		{
+		case 1:
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(1) / 100);
+			break;
+		case 2:
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(2) / 100);
+			break;
+		case 3:
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(3) / 100);
+			break;
+		case 4:
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(4) / 100);
+			break;
+		default:
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(5) / 100);
+			break;
+		}
+		
+		this.foodSafetyScore = foodSafetyScore;
+	}
+	
+	private void sortInspections() {
 		//TODO
-//		foodSafetyScore = 
+//        sort the inspections
+	}
+	
+	private boolean recentInspection(Inspection latestInspection) {
+		Date recentDate = new Date(2018, 4, 1);
+		return latestInspection.getTime().after(recentDate);
+	}
+	
+	private double passRate(ArrayList<Inspection> array) {
+		int pass = 0;
+		for (int i=0; i<array.size(); i++) {
+			if(array.get(i).getResult() == ResultT.PASS || array.get(i).getResult() == ResultT.CONDITIONALPASS) {
+				pass++;
+			}
+		}
+		return (double)(pass/array.size());
+	}
+	
+	private double weightedGrade (int numberOfNewInspections) {
+		double weightedGrade = 0;
+		double denominator = (1+numberOfNewInspections)*numberOfNewInspections/2.0;
+		double numerator = 1;
+		for (int i=numberOfNewInspections-1; i>=0; i++) {
+			weightedGrade += this.inspections.get(i).CalcInspectionScore()*(numerator/denominator);
+			numerator ++;
+		}
+		return weightedGrade;
 	}
 	
 	public void calculateNeighborhoodSafetyScore() {

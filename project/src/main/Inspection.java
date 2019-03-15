@@ -1,6 +1,6 @@
 package main;
 
-import java.text.ParseException;
+import java.text.ParseException; 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,6 +44,31 @@ public class Inspection {
 			System.out.println("Unparseable using " + dateStr);
 		}
 		return time;
+	}
+	
+	private int getViolationNumber() {
+		String[] splitViolationStr = this.violation.trim().split("\\s+");
+		return Integer.parseInt(splitViolationStr[0]);
+	}
+	
+	public int CalcInspectionScore() {
+		int inspectionScore = 0;
+		if(this.getResult() == ResultT.PASS) {
+			inspectionScore = 100;
+		}
+		else if(this.getResult() == ResultT.CONDITIONALPASS) {
+			int condition = this.getViolationNumber();
+			if(condition <= 14) {
+				inspectionScore = 50;
+			}
+			else if(condition <= 29) {
+				inspectionScore = 70;
+			}
+			else {
+				inspectionScore = 90;
+			}
+		}
+		return inspectionScore;
 	}
 
 }
