@@ -1,78 +1,77 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago.jobs;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+
+import org.hibernate.validator.constraints.Mod11Check.ProcessingDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
+import au.com.bytecode.opencsv.CSVReader;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
-@ComponentScan(value = {"ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant"})
 @SpringBootApplication
-public class DataLoader extends SpringBootServletInitializer implements CommandLineRunner {
+@ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
+public class DataLoader implements CommandLineRunner {
+
+	@Autowired
+	private InspectionRepository inspectionRepo;
 
 	@Autowired
 	private RestaurantRepository restaurantRepo;
-	
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(DataLoader.class, args);
-	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("HAHA");
+		contextLoads();
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(DataLoader.class, args);
+	}
+
+	public void contextLoads() throws FileNotFoundException {
+
+		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/InspectionFiltered.csv";
+		String line = null;
+
+		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 1);
+		List<String[]> allRows;
+		int counter = 0;
+		try {
+			allRows = reader.readAll();
+			for (String[] temp : allRows) {
+				counter++;
+				System.out.println("Processing..." + counter);
+				String name = temp[1];
+				int licenseNum = Integer.parseInt(temp[2]);
+				String address = temp[4];
+				int zip = Integer.parseInt(temp[5]);
+				String dateStr = temp[6];
+				String result = temp[7];
+				String violation = temp[8];
+				double latitude = Double.parseDouble(temp[9]);
+				double longitude = Double.parseDouble(temp[10]);
+
+				Restaurant restaurant = restaurantRepo.findByLicenseNum(licenseNum);
+				if (restaurant == null) {
+					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum, address);
+				}
+				Inspection inspection = new Inspection(result, violation, dateStr);
+				restaurant.addInspection(inspection);
+				restaurantRepo.save(restaurant);
+//				inspectionRepo.save(inspection);
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
-
-//public class DataLoader implements CommandLineRunner {
-//
-//	@Autowired
-//	private RestaurantRepository restaurantRepo;
-//
-//	public static void main(String[] args) throws Exception {
-//
-//		SpringApplication.run(DataLoader.class, args);
-//
-//	} 
-//
-//	@Override
-//	public void run(String... args) throws Exception {
-//		contextLoads();
-//	}
-//
-//	public void contextLoads() throws FileNotFoundException {
-//
-//		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/InspectionsSample.csv";
-//		String line = null;
-//
-//		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 1);
-//		List<String[]> allRows;
-//		try {
-//			allRows = reader.readAll();
-//			for (String[] temp : allRows) {
-//				String name = temp[1];
-//				int licenseNum = Integer.parseInt(temp[2]);
-//				String address = temp[4];
-//				int zip = Integer.parseInt(temp[5]);
-//				String dateStr = temp[6];
-//				String result = temp[7];
-//				String violation = temp[8];
-//				double latitude = Double.parseDouble(temp[9]);
-//				double longitude = Double.parseDouble(temp[10]);
-//
-//				Restaurant restaurant = restaurantRepo.findByLicenseNum(licenseNum);
-//				if (restaurant == null) {
-//					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum, address);
-//				} 
-//				Inspection inspection = new Inspection(result, violation, dateStr);
-//				restaurant.addInspection(inspection);
-//				restaurantRepo.save(restaurant);
-//			}
-//			reader.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//}

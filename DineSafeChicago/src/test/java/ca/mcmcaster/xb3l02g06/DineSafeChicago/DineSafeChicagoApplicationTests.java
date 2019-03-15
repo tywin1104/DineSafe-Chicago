@@ -1,11 +1,8 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago;
 
-import static org.assertj.core.api.Assertions.not;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;

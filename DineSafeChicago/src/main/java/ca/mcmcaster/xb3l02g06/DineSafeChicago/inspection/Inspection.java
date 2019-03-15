@@ -4,13 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
@@ -26,7 +25,8 @@ public class Inspection {
 	private Restaurant restaurant;
 
 	private String result;
-	@Column(length=8192)
+//	@Column(length=8192)
+	@Lob 
 	private String violation;
 	private Date time;
 	
