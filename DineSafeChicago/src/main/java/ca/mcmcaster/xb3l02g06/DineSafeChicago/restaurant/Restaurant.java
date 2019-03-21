@@ -17,7 +17,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 
 @Entity
 public class Restaurant implements Comparable<Restaurant> {
-	@Id
+	@Id	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;

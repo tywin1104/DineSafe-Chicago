@@ -21,19 +21,18 @@ public class Inspection {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name="restaurant_id")
+	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
 	private String result;
-//	@Column(length=8192)
-	@Lob 
+	@Lob
 	private String violation;
 	private Date time;
-	
+
 	@Override
 	public String toString() {
 		return "Inspection [result=" + result + ", time=" + time + "]";
-	} 
+	}
 
 	protected Inspection() {
 	}
@@ -42,12 +41,12 @@ public class Inspection {
 		this.result = result;
 		this.violation = violation;
 		this.time = parseTime(timeStr);
-	} 
-	
+	}
+
 	public Restaurant getRestaurant() {
 		return restaurant;
 	}
-	
+
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}

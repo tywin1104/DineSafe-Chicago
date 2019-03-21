@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import org.hibernate.validator.constraints.Mod11Check.ProcessingDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -30,17 +29,17 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		contextLoads();
+		loadResInspctions();
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataLoader.class, args);
 	}
 
-	public void contextLoads() throws FileNotFoundException {
+	public void loadResInspctions() throws FileNotFoundException {
+		//TODO: out of business -> closed,  parallel processing
 
 		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/InspectionFiltered.csv";
-		String line = null;
 
 		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 1);
 		List<String[]> allRows;
@@ -67,7 +66,6 @@ public class DataLoader implements CommandLineRunner {
 				Inspection inspection = new Inspection(result, violation, dateStr);
 				restaurant.addInspection(inspection);
 				restaurantRepo.save(restaurant);
-//				inspectionRepo.save(inspection);
 			}
 			reader.close();
 		} catch (IOException e) {
