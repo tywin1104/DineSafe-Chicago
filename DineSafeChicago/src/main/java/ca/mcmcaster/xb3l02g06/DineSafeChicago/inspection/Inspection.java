@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +22,10 @@ public class Inspection {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "restaurant_id")
+	@JoinColumns({
+		  @JoinColumn(name = "restaurant_name", referencedColumnName= "restaurant_name"),
+		  @JoinColumn(name = "restaurant_address", referencedColumnName="restaurant_address")
+	})
 	private Restaurant restaurant;
 
 	private String result;
