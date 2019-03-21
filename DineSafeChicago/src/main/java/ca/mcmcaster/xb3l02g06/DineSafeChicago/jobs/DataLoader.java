@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Profile;
 
 import au.com.bytecode.opencsv.CSVReader;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
@@ -18,6 +19,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
+@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
