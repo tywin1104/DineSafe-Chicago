@@ -3,7 +3,7 @@ package main;
 import java.util.ArrayList; 
 import java.util.Date;
 
-import main.Inspection.ResultT;
+import final_project.Inspection.ResultT;
 
 public class Restaurant implements Comparable<Restaurant> {
 	private final String name;
@@ -107,8 +107,19 @@ public class Restaurant implements Comparable<Restaurant> {
 	}
 	
 	private void sortInspections() {
-		//TODO
-//        sort the inspections
+		int n = this.inspections.size();
+		for (int i = 0; i < n-1; i++) {
+			int min_idx = i;
+			for(int j = i+1; j < n; j++) {
+				if(this.inspections.get(j).getTime().compareTo(this.inspections.get(min_idx).getTime()) > 0) {
+					min_idx = j;
+				}
+			}
+			Inspection temp = this.inspections.get(min_idx);
+			this.inspections.set(min_idx, this.inspections.get(i));
+			this.inspections.set(i, temp);
+		}
+		
 	}
 	
 	private boolean recentInspection(Inspection latestInspection) {
