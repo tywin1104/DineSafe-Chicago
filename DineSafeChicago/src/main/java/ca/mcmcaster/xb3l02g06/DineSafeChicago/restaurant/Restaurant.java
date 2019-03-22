@@ -2,10 +2,10 @@ package ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,16 +17,14 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 
 @Entity
 public class Restaurant implements Comparable<Restaurant> {
-	@Id	
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	private String name;
+
+	@EmbeddedId
+	private RestaurantIdentity restaurantIdentity;
+
 	private int zip;
-	@Column(unique = true)
 	private int licenseNum;
 	private double latitude;
 	private double longitude;
-	private String address;
 	private double foodSafetyScore;
 	private double neighborhoodSafetyScore;
 	private double overallScore;
@@ -37,13 +35,13 @@ public class Restaurant implements Comparable<Restaurant> {
 
 	protected Restaurant() {
 	}
- 
-	public Restaurant(String name, int zip, double latitude, double longitude, int licenseNum, String address) {
-		this.name = name;
+	
+	public Restaurant(RestaurantIdentity restaurantIdentity, int zip, double latitude, double longitude,
+			int licenseNum) {
+		this.restaurantIdentity = restaurantIdentity;
 		this.zip = zip;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.address = address;
 		this.closed = false;
 		this.licenseNum = licenseNum;
 		this.foodSafetyScore = 0;
@@ -61,13 +59,13 @@ public class Restaurant implements Comparable<Restaurant> {
 		return inspections;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	public int getZip() {
 		return zip;
@@ -101,13 +99,13 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.longitude = longitude;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
+//	public String getAddress() {
+//		return address;
+//	}
+//
+//	public void setAddress(String address) {
+//		this.address = address;
+//	}
 
 	public double getFoodSafetyScore() {
 		return foodSafetyScore;
@@ -145,8 +143,16 @@ public class Restaurant implements Comparable<Restaurant> {
 		return Double.compare(overallScore, other.overallScore);
 	}
 
+	public RestaurantIdentity getRestaurantIdentity() {
+		return restaurantIdentity;
+	}
+
+	public void setRestaurantIdentity(RestaurantIdentity restaurantIdentity) {
+		this.restaurantIdentity = restaurantIdentity;
+	}
+
 	@Override
 	public String toString() {
-		return "Restaurant [name=" + name + ", overallScore=" + overallScore + "]";
+		return "Restaurant [name=" + this.restaurantIdentity.getName() + ", overallScore=" + overallScore + "]";
 	}
 }

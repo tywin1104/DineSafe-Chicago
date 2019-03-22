@@ -16,10 +16,11 @@ import au.com.bytecode.opencsv.CSVReader;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-@Profile("test")
+//@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
@@ -38,6 +39,13 @@ public class DataLoader implements CommandLineRunner {
 		SpringApplication.run(DataLoader.class, args);
 	}
 
+//	public void test() {
+//		Restaurant restaurant = restaurantRepo.findByLicenseNum(2002776);
+//		List<Inspection> inspections = restaurant.getInspections();
+//		for (Inspection inspection : inspections) {
+//			System.out.println(inspection);
+//		}
+//	}
 	public void loadResInspctions() throws FileNotFoundException {
 		//TODO: out of business -> closed,  parallel processing
 
@@ -60,10 +68,11 @@ public class DataLoader implements CommandLineRunner {
 				String violation = temp[8];
 				double latitude = Double.parseDouble(temp[9]);
 				double longitude = Double.parseDouble(temp[10]);
-
-				Restaurant restaurant = restaurantRepo.findByLicenseNum(licenseNum);
+				
+				Restaurant restaurant = restaurantRepo.findByRestaurantIdentity(new RestaurantIdentity(address, name));
 				if (restaurant == null) {
-					restaurant = new Restaurant(name, zip, latitude, longitude, licenseNum, address);
+					RestaurantIdentity restaurantIdentity = new RestaurantIdentity(address, name);
+					restaurant = new Restaurant(restaurantIdentity, zip, latitude, longitude, licenseNum); 
 				}
 				Inspection inspection = new Inspection(result, violation, dateStr);
 				restaurant.addInspection(inspection);
