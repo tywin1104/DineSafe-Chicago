@@ -10,7 +10,12 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
  */
 
 public class HeapSort {
-
+	
+	/**
+	 * heap sort using Comparable
+	 * @param x - the input array containing jobs that need to be sorted.
+	 * @param n - the size of the input array
+	 */
 	public static void sortHeap ( Comparable[] x, int n ) {
 		for (int k = n/2; k >= 1; k--) 
 			sink(x, k, n);
