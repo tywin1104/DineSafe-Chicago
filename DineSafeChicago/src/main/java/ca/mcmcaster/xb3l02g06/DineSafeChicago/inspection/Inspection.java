@@ -22,10 +22,8 @@ public class Inspection {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumns({
-		  @JoinColumn(name = "restaurant_name", referencedColumnName= "restaurant_name"),
-		  @JoinColumn(name = "restaurant_address", referencedColumnName="restaurant_address")
-	})
+	@JoinColumns({ @JoinColumn(name = "restaurant_name", referencedColumnName = "restaurant_name"),
+			@JoinColumn(name = "restaurant_address", referencedColumnName = "restaurant_address") })
 	private Restaurant restaurant;
 
 	private String result;
@@ -76,5 +74,28 @@ public class Inspection {
 			System.out.println("Unparseable using " + dateStr);
 		}
 		return time;
+	}
+
+	// For calculating food safety score
+	private int getViolationNumber() {
+		String[] splitViolationStr = this.violation.trim().split("\\s+");
+		return Integer.parseInt(splitViolationStr[0]);
+	}
+
+	public int CalcInspectionScore() {
+		int inspectionScore = 0;
+		if (this.getResult() == "Pass") {
+			inspectionScore = 100;
+		} else if (this.getResult() == "Pass w/ Conditions") {
+			int condition = this.getViolationNumber();
+			if (condition <= 14) {
+				inspectionScore = 50;
+			} else if (condition <= 29) {
+				inspectionScore = 70;
+			} else {
+				inspectionScore = 90;
+			}
+		}
+		return inspectionScore;
 	}
 }

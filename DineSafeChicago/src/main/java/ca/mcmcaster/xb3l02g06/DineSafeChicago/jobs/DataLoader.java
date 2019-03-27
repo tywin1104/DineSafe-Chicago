@@ -32,20 +32,24 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		loadResInspctions();
+//		loadResInspctions();
+		updateFoodSafetyScore();
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataLoader.class, args);
 	}
-
-//	public void test() {
-//		Restaurant restaurant = restaurantRepo.findByLicenseNum(2002776);
-//		List<Inspection> inspections = restaurant.getInspections();
-//		for (Inspection inspection : inspections) {
-//			System.out.println(inspection);
-//		}
-//	}
+	
+	
+	public void updateFoodSafetyScore() {
+		int counter = 0;
+		for(Restaurant restaurant : restaurantRepo.findAll()) {
+			counter++;
+//			System.out.println("Updating... " + counter);
+			restaurant.calculateFoodSafetyScore(); 
+			restaurantRepo.save(restaurant);
+		}
+	}
 	public void loadResInspctions() throws FileNotFoundException {
 		//TODO: out of business -> closed,  parallel processing
 
