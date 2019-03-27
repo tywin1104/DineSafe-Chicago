@@ -20,7 +20,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-//@Profile("test")
+@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
