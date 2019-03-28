@@ -1,7 +1,5 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms;
 
-import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
-
 /**
  * This class implements heap sort algorithm.
  * 

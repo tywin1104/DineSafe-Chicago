@@ -15,12 +15,13 @@ import org.springframework.context.annotation.Profile;
 import au.com.bytecode.opencsv.CSVReader;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-@Profile("test")
+//@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
@@ -28,7 +29,7 @@ public class DataLoader implements CommandLineRunner {
 	private InspectionRepository inspectionRepo;
 
 	@Autowired
-	private RestaurantRepository restaurantRepo;
+	private RestaurantRepository restaurantRepo;  
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -46,7 +47,8 @@ public class DataLoader implements CommandLineRunner {
 		for(Restaurant restaurant : restaurantRepo.findAll()) {
 			counter++;
 //			System.out.println("Updating... " + counter);
-			restaurant.calculateFoodSafetyScore(); 
+//			System.out.println(FoodSafetyScoreCalculator.calculate(restaurant));
+//			restaurant.calculateFoodSafetyScore(); 
 			restaurantRepo.save(restaurant);
 		}
 	}
@@ -58,7 +60,7 @@ public class DataLoader implements CommandLineRunner {
 		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 1);
 		List<String[]> allRows;
 		int counter = 0;
-		try {
+		try { 
 			allRows = reader.readAll();
 			for (String[] temp : allRows) {
 				counter++;
