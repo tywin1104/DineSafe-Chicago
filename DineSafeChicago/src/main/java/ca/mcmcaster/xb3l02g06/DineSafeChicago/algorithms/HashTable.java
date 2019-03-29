@@ -31,7 +31,7 @@ public class HashTable {
 	}
 
 	private int hash(int zip) {
-		return (zip & 0x7fffffff) % capacity;
+		return zip  % capacity;
 	}
 
 	public ArrayList<Restaurant> getRestaurants(int zip) {

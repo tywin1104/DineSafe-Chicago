@@ -17,13 +17,13 @@ import au.com.bytecode.opencsv.CSVReader;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms.HashTable;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
-import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
+//import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-//@Profile("test")
+@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
@@ -50,8 +50,10 @@ public class DataLoader implements CommandLineRunner {
 		HashTable hashTable = new HashTable(59);  
 		hashTable.loadRestaurants(restaurants);
 		ArrayList<Restaurant> filtered = hashTable.getRestaurants(60606);
-		System.out.println(filtered.size());
- 
+//		System.out.println(filtered.size());
+		for(Restaurant res : filtered) {
+			System.out.println(res.getRestaurantIdentity().getName());
+		}
 	}
 	
 	
