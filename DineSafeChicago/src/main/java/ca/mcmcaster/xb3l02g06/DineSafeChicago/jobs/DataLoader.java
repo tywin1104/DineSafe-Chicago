@@ -33,12 +33,17 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-//		loadResInspctions();
-		updateFoodSafetyScore();
+		test();
+//		loadResInspctions();  
+//		updateFoodSafetyScore();
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataLoader.class, args);
+	}
+	
+	public void test() {
+		System.out.println(restaurantRepo.findByClosedFalse().size());
 	}
 	
 	
@@ -53,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
 		}
 	}
 	public void loadResInspctions() throws FileNotFoundException {
-		//TODO: out of business -> closed,  parallel processing
+		//TODO: out of business -> closed,
 
 		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/InspectionFiltered.csv";
 
@@ -81,6 +86,10 @@ public class DataLoader implements CommandLineRunner {
 					restaurant = new Restaurant(restaurantIdentity, zip, latitude, longitude, licenseNum); 
 				}
 				Inspection inspection = new Inspection(result, violation, dateStr);
+				//Check if that restaurant is closed
+				if(result.equals("Out of Business")) {
+					restaurant.setClosed(true);
+				}
 				restaurant.addInspection(inspection);
 				restaurantRepo.save(restaurant);
 			}
