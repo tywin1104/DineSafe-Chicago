@@ -21,7 +21,7 @@ public class FoodSafetyScoreCalculator {
 		//System.out.println("Sorted Array " + this.inspections);
 		
 		// 20%: recent inspection
-		if(recentInspection(this.inspections.get(0))) {
+		if(recentInspection(restaurant.inspections.get(0))) {
 			score += RECENT_INSPECTION;
 		}
 		//System.out.println("Score after first step " + score);
@@ -32,39 +32,39 @@ public class FoodSafetyScoreCalculator {
 		//System.out.println("Socre after second step " + score);
 		
 		// 60%: latest inspections (up to five inspections)
-		switch(this.inspections.size())
+		switch(restaurant.inspections.size())
 		{
 		case 1:
-			score += INSPECTION_DETAILS * (weightedGrade(1) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(1,restaurant) / 100);
 			break;
 		case 2:
-			score += INSPECTION_DETAILS * (weightedGrade(2) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(2,restaurant) / 100);
 			break;
 		case 3:
-			score += INSPECTION_DETAILS * (weightedGrade(3) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(3,restaurant) / 100);
 			break;
 		case 4:
-			score += INSPECTION_DETAILS * (weightedGrade(4) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(4,restaurant) / 100);
 			break;
 		default:
-			score += INSPECTION_DETAILS * (weightedGrade(5) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(5,restaurant) / 100);
 			break;
 		}
 		return score;
 	}
 
-	private void sortInspections() {
-		int n = this.inspections.size();
+	private void sortInspections(restaurant) {
+		int n = restaurant.inspections.size();
 		for (int i = 0; i < n-1; i++) {
 			int min_idx = i;
 			for(int j = i+1; j < n; j++) {
-				if(this.inspections.get(j).getTime().compareTo(this.inspections.get(min_idx).getTime()) > 0) {
+				if(restaurant.inspections.get(j).getTime().compareTo(restaurant.inspections.get(min_idx).getTime()) > 0) {
 					min_idx = j;
 				}
 			}
-			Inspection temp = this.inspections.get(min_idx);
-			this.inspections.set(min_idx, this.inspections.get(i));
-			this.inspections.set(i, temp);
+			Inspection temp = restaurant.inspections.get(min_idx);
+			restaurant.inspections.set(min_idx, restaurant.inspections.get(i));
+			restaurant.inspections.set(i, temp);
 		}
 		
 	}
@@ -95,7 +95,7 @@ public class FoodSafetyScoreCalculator {
 		double numerator = 1;
 		for (int i=numberOfNewInspections-1; i>=0; i--) {
 			//System.out.println("The score of " + i + " Record is " + this.inspections.get(i).CalcInspectionScore());
-			weightedGrade += this.inspections.get(i).CalcInspectionScore()*(numerator/denominator);
+			weightedGrade += restaurant.inspections.get(i).CalcInspectionScore()*(numerator/denominator);
 			numerator ++;
 		}
 		return weightedGrade;
