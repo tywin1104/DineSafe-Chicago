@@ -2,102 +2,89 @@ package ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant;
 
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 
 public class FoodSafetyScoreCalculator {
 
 	public static double calculate(Restaurant restaurant) {
-		double score = 0;
+		double foodSafetyScore = 0;
 		double RECENT_INSPECTION = 20;
 		double CONSISTENCY = 20;
 		double INSPECTION_DETAILS = 60;
-		
+
 		// sort the inspection array
-		//System.out.println("Original Array " + this.inspections);
-		sortInspections();
-		//System.out.println("Sorted Array " + this.inspections);
-		
+		sortInspections(restaurant);
+
 		// 20%: recent inspection
-		if(recentInspection(restaurant.inspections.get(0))) {
-			score += RECENT_INSPECTION;
+		if (recentInspection(restaurant.getInspections().get(0))) {
+			foodSafetyScore += RECENT_INSPECTION;
 		}
-		//System.out.println("Score after first step " + score);
-		
+
 		// 20%: pass rate (consistency)
-		score += (CONSISTENCY*passRate(this.inspections));
-		//System.out.println("Pass Rate is " + passRate(this.inspections));
-		//System.out.println("Socre after second step " + score);
-		
+		foodSafetyScore += (CONSISTENCY * passRate(restaurant.getInspections()));
+
 		// 60%: latest inspections (up to five inspections)
-		switch(restaurant.inspections.size())
-		{
+		switch (restaurant.getInspections().size()) {
 		case 1:
-			score += INSPECTION_DETAILS * (weightedGrade(1,restaurant) / 100);
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(1, restaurant) / 100);
 			break;
 		case 2:
-			score += INSPECTION_DETAILS * (weightedGrade(2,restaurant) / 100);
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(2, restaurant) / 100);
 			break;
 		case 3:
-			score += INSPECTION_DETAILS * (weightedGrade(3,restaurant) / 100);
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(3, restaurant) / 100);
 			break;
 		case 4:
-			score += INSPECTION_DETAILS * (weightedGrade(4,restaurant) / 100);
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(4, restaurant) / 100);
 			break;
 		default:
-			score += INSPECTION_DETAILS * (weightedGrade(5,restaurant) / 100);
+			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(5, restaurant) / 100);
 			break;
 		}
-		return score;
+		return foodSafetyScore;
 	}
 
-	private void sortInspections(restaurant) {
-		int n = restaurant.inspections.size();
-		for (int i = 0; i < n-1; i++) {
+	private static void sortInspections(Restaurant restaurant) {
+		int n = restaurant.getInspections().size();
+		for (int i = 0; i < n - 1; i++) {
 			int min_idx = i;
-			for(int j = i+1; j < n; j++) {
-				if(restaurant.inspections.get(j).getTime().compareTo(restaurant.inspections.get(min_idx).getTime()) > 0) {
+			for (int j = i + 1; j < n; j++) {
+				if (restaurant.getInspections().get(j).getTime()
+						.compareTo(restaurant.getInspections().get(min_idx).getTime()) > 0) {
 					min_idx = j;
 				}
 			}
-			Inspection temp = restaurant.inspections.get(min_idx);
-			restaurant.inspections.set(min_idx, restaurant.inspections.get(i));
-			restaurant.inspections.set(i, temp);
+			Inspection temp = restaurant.getInspections().get(min_idx);
+			restaurant.getInspections().set(min_idx, restaurant.getInspections().get(i));
+			restaurant.getInspections().set(i, temp);
 		}
-		
-	}
-	
-	private boolean recentInspection(Inspection latestInspection) {
-		Calendar cal = Calendar.getInstance();
-		Date today = cal.getTime();
-		cal.add(Calendar.YEAR,-1);
-		Date lastYear = cal.getTime();
-		return latestInspection.getTime().after(lastYear);
+
 	}
 
-	private double passRate(ArrayList<Inspection> array) {
+	private static boolean recentInspection(Inspection latestInspection) {
+		@SuppressWarnings("deprecation")
+		Date recentDate = new Date(2018, 4, 1);
+		return latestInspection.getTime().after(recentDate);
+	}
+
+	private static double passRate(List<Inspection> array) {
 		int pass = 0;
-		for (int i=0; i<array.size(); i++) {
-			if(array.get(i).getResult() == "Pass" || array.get(i).getResult() == "Pass w/ Conditions") {
+		for (int i = 0; i < array.size(); i++) {
+			if (array.get(i).getResult() == "Pass" || array.get(i).getResult() == "Pass w/ Conditions") {
 				pass++;
 			}
 		}
-		//System.out.println("Passes " + pass + " times");
-		//System.out.println("Totol Inspections " + (array.size()));
-		return ((double)pass/array.size());
+		return (double) (pass / array.size());
 	}
-	
-	private double weightedGrade (int numberOfNewInspections) {
+
+	private static double weightedGrade(int numberOfNewInspections, Restaurant restaurant) {
 		double weightedGrade = 0;
-		double denominator = (1+numberOfNewInspections)*numberOfNewInspections/2.0;
+		double denominator = (1 + numberOfNewInspections) * numberOfNewInspections / 2.0;
 		double numerator = 1;
-		for (int i=numberOfNewInspections-1; i>=0; i--) {
-			//System.out.println("The score of " + i + " Record is " + this.inspections.get(i).CalcInspectionScore());
-			weightedGrade += restaurant.inspections.get(i).CalcInspectionScore()*(numerator/denominator);
-			numerator ++;
+		for (int i = numberOfNewInspections - 1; i >= 0; i--) {
+			weightedGrade += restaurant.getInspections().get(i).CalcInspectionScore() * (numerator / denominator);
+			numerator++;
 		}
 		return weightedGrade;
 	}
-}
