@@ -3,6 +3,7 @@ package ca.mcmcaster.xb3l02g06.DineSafeChicago.jobs;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 
 import au.com.bytecode.opencsv.CSVReader;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms.HashTable;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
@@ -43,7 +45,13 @@ public class DataLoader implements CommandLineRunner {
 	}
 	
 	public void test() {
-		System.out.println(restaurantRepo.findByClosedFalse().size());
+		ArrayList<Restaurant> restaurants = (ArrayList<Restaurant>) restaurantRepo.findByClosedFalse();
+		//59 distinct zip codes for all restaurants in total
+		HashTable hashTable = new HashTable(59);  
+		hashTable.loadRestaurants(restaurants);
+		ArrayList<Restaurant> filtered = hashTable.getRestaurants(60606);
+		System.out.println(filtered.size());
+ 
 	}
 	
 	

@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface RestaurantRepository extends CrudRepository<Restaurant, Long>{
 	public Restaurant findByLicenseNum(int licenseNum);
 	public Restaurant findByRestaurantIdentity(RestaurantIdentity restaurantIdentity);
-	public List<Restaurant> findByClosedFalse();
-	public List<Restaurant> findByClosed(boolean closed);
+	public List<Restaurant> findByClosedFalse(); 
 }
