@@ -78,6 +78,9 @@ public class Inspection {
 
 	// For calculating food safety score
 	private int getViolationNumber() {
+		if(this.violation.isEmpty()) {
+			return 0;
+		}
 		String[] splitViolationStr = this.violation.trim().split("\\s+");
 		return Integer.parseInt(splitViolationStr[0]);
 	}
