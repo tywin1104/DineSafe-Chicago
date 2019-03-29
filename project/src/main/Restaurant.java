@@ -1,9 +1,10 @@
 package main;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
-import final_project.Inspection.ResultT;
+import main.Inspection.*;
 
 public class Restaurant implements Comparable<Restaurant> {
 	private final String name;
@@ -12,7 +13,6 @@ public class Restaurant implements Comparable<Restaurant> {
 	private final double latitude;
 	private final double longitude;
 	private ArrayList<Inspection> inspections;
-	private ArrayList<Crime> crimes; 
 	private double foodSafetyScore;
 	private double neighborhoodSafetyScore;
 	private double overallScore;
@@ -25,7 +25,6 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.closed = false; 
-		this.crimes = new ArrayList<Crime>();
 		this.inspections = new ArrayList<Inspection>();
 	}
 	
@@ -61,49 +60,58 @@ public class Restaurant implements Comparable<Restaurant> {
 		return overallScore;
 	}
 	
+	public double getFoodSafetyScore() {
+		return this.foodSafetyScore;
+	}
+	
 	public boolean isClosed() {
 		return isClosed();
 	}
 	
 	
 	public void calculateFoodSafetyScore() {
-		double foodSafetyScore = 0;
+		double score = 0;
 		double RECENT_INSPECTION = 20;
 		double CONSISTENCY = 20;
 		double INSPECTION_DETAILS = 60;
 		
 		// sort the inspection array
+		//System.out.println("Original Array " + this.inspections);
 		sortInspections();
+		//System.out.println("Sorted Array " + this.inspections);
 		
 		// 20%: recent inspection
 		if(recentInspection(this.inspections.get(0))) {
-			foodSafetyScore += RECENT_INSPECTION;
+			score += RECENT_INSPECTION;
 		}
+		//System.out.println("Score after first step " + score);
 		
 		// 20%: pass rate (consistency)
-		foodSafetyScore += (CONSISTENCY*passRate(this.inspections));
+		score += (CONSISTENCY*passRate(this.inspections));
+		//System.out.println("Pass Rate is " + passRate(this.inspections));
+		//System.out.println("Socre after second step " + score);
 		
 		// 60%: latest inspections (up to five inspections)
 		switch(this.inspections.size())
 		{
 		case 1:
-			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(1) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(1) / 100);
 			break;
 		case 2:
-			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(2) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(2) / 100);
 			break;
 		case 3:
-			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(3) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(3) / 100);
 			break;
 		case 4:
-			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(4) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(4) / 100);
 			break;
 		default:
-			foodSafetyScore += INSPECTION_DETAILS * (weightedGrade(5) / 100);
+			score += INSPECTION_DETAILS * (weightedGrade(5) / 100);
 			break;
 		}
-		
-		this.foodSafetyScore = foodSafetyScore;
+		System.out.println("Final Score " + score);
+		this.foodSafetyScore = score;
 	}
 	
 	private void sortInspections() {
@@ -123,8 +131,11 @@ public class Restaurant implements Comparable<Restaurant> {
 	}
 	
 	private boolean recentInspection(Inspection latestInspection) {
-		Date recentDate = new Date(2018, 4, 1);
-		return latestInspection.getTime().after(recentDate);
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.add(Calendar.YEAR,-1);
+		Date lastYear = cal.getTime();
+		return latestInspection.getTime().after(lastYear);
 	}
 	
 	private double passRate(ArrayList<Inspection> array) {
@@ -134,14 +145,17 @@ public class Restaurant implements Comparable<Restaurant> {
 				pass++;
 			}
 		}
-		return (double)(pass/array.size());
+		//System.out.println("Passes " + pass + " times");
+		//System.out.println("Totol Inspections " + (array.size()));
+		return ((double)pass/array.size());
 	}
 	
 	private double weightedGrade (int numberOfNewInspections) {
 		double weightedGrade = 0;
 		double denominator = (1+numberOfNewInspections)*numberOfNewInspections/2.0;
 		double numerator = 1;
-		for (int i=numberOfNewInspections-1; i>=0; i++) {
+		for (int i=numberOfNewInspections-1; i>=0; i--) {
+			//System.out.println("The score of " + i + " Record is " + this.inspections.get(i).CalcInspectionScore());
 			weightedGrade += this.inspections.get(i).CalcInspectionScore()*(numerator/denominator);
 			numerator ++;
 		}
@@ -201,5 +215,38 @@ public class Restaurant implements Comparable<Restaurant> {
 		if (zip != other.zip)
 			return false;
 		return true;
+	}
+	
+	public static void main(String[] args) {
+		/***
+		Inspection inspection1 = new Inspection(ResultT.CONDITIONALPASS,"1 PERSON MAINTAIN","01/02/2018");
+		Inspection inspection2 = new Inspection(ResultT.INVALID,"41 WIPING CLOTAIN","03/05/2019");
+		Inspection inspection3 = new Inspection(ResultT.PASS,"","12/05/2019");
+		Inspection inspection4 = new Inspection(ResultT.FAIL,"23 aaaaaa","03/05/2017");
+		
+		Restaurant res1 = new Restaurant ("aaa", 1114, 1141, 114.1, 411.1);
+		Restaurant res2 = new Restaurant("aab", 1121, 1121, 121.1, 121.1);
+		Restaurant res3 = new Restaurant("aas", 1131, 1131, 131.1, 131.1);
+		Restaurant res4 = new Restaurant("aaf", 1111, 1211, 111.1, 121.1);
+		
+		res1.addInspection(inspection1);
+		res1.addInspection(inspection2);
+		res1.addInspection(inspection3);
+		res1.addInspection(inspection4);
+		
+		res2.addInspection(inspection2);
+		res2.addInspection(inspection1);
+		
+		res3.addInspection(inspection3);
+		
+		res4.addInspection(inspection3);
+		res4.addInspection(inspection4);
+		res4.addInspection(inspection1);
+		
+		res1.calculateFoodSafetyScore();
+		res2.calculateFoodSafetyScore();
+		res3.calculateFoodSafetyScore();
+		res4.calculateFoodSafetyScore();
+		***/
 	}
 }
