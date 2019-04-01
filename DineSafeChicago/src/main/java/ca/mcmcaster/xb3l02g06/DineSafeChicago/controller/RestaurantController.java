@@ -25,4 +25,9 @@ public class RestaurantController {
 		ArrayList<Restaurant> restaurants = restaurantService.getTopRestaurantsByZip(zip);
 		return restaurants;
 	}
+
+	@RequestMapping("/restaurant/{licenseNum}")
+	public Restaurant getRestaurantByLicenseNum(@PathVariable int licenseNum) {
+		return restaurantService.getRestaurantByLicenseNumber(licenseNum);
+	}
 }

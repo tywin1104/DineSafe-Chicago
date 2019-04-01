@@ -43,12 +43,12 @@ public class HeapSort {
 	}
 
 	private static boolean less(ArrayList<Restaurant> x, int i, int j) {
-		return (x.get(i-1)).compareTo(x.get(j - 1)) < 0;
+		return (x.get(i - 1)).compareTo(x.get(j - 1)) < 0;
 	}
 
 	private static void exch(ArrayList<Restaurant> x, int i, int j) {
-		Restaurant t = x.get(i-1);
-		
+		Restaurant t = x.get(i - 1);
+
 		x.set(i - 1, x.get(j - 1));
 		x.set(j - 1, t);
 	}
@@ -57,9 +57,9 @@ public class HeapSort {
 //		// TEST HERE
 //		// After implmentation, create an array of restaurants to test
 		ArrayList<Restaurant> res = new ArrayList();
-		Restaurant r1 = new Restaurant(new RestaurantIdentity("123", "123"), 20, 2.0, 3.0,100);
-		Restaurant r2 = new Restaurant(new RestaurantIdentity("456", "456"), 20, 2.0, 3.0,100);
-		Restaurant r3 = new Restaurant(new RestaurantIdentity("789", "789"), 20, 2.0, 3.0,100);
+		Restaurant r1 = new Restaurant(new RestaurantIdentity("123", "123"), 20, 2.0, 3.0, 100);
+		Restaurant r2 = new Restaurant(new RestaurantIdentity("456", "456"), 20, 2.0, 3.0, 100);
+		Restaurant r3 = new Restaurant(new RestaurantIdentity("789", "789"), 20, 2.0, 3.0, 100);
 		r1.setOverallScore(80);
 		r2.setOverallScore(70);
 		r3.setOverallScore(90);
@@ -70,7 +70,6 @@ public class HeapSort {
 		for (int i = 0; i < 3; i++) {
 			System.out.println(res.get(i));
 		}
-
 	}
 
 }
