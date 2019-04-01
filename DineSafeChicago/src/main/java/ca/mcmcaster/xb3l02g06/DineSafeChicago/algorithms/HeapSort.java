@@ -1,5 +1,10 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms;
 
+import java.util.ArrayList;
+
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
+
 /**
  * This class implements heap sort algorithm.
  * 
@@ -15,7 +20,7 @@ public class HeapSort {
 	 * @param x - the input array containing jobs that need to be sorted.
 	 * @param n - the size of the input array
 	 */
-	public static void sortHeap(Comparable[] x, int n) {
+	public static void sortHeap(ArrayList<Restaurant> x, int n) {
 		for (int k = n / 2; k >= 1; k--)
 			sink(x, k, n);
 
@@ -25,7 +30,7 @@ public class HeapSort {
 		}
 	}
 
-	private static void sink(Comparable[] x, int k, int n) {
+	private static void sink(ArrayList<Restaurant> x, int k, int n) {
 		while (2 * k <= n) {
 			int j = 2 * k;
 			if (j < n && less(x, j, j + 1))
@@ -37,43 +42,34 @@ public class HeapSort {
 		}
 	}
 
-	private static boolean less(Comparable[] x, int i, int j) {
-		return x[i - 1].compareTo(x[j - 1]) < 0;
+	private static boolean less(ArrayList<Restaurant> x, int i, int j) {
+		return (x.get(i-1)).compareTo(x.get(j - 1)) < 0;
 	}
 
-	private static void exch(Comparable[] x, int i, int j) {
-		Comparable t = x[i - 1];
-		x[i - 1] = x[j - 1];
-		x[j - 1] = t;
+	private static void exch(ArrayList<Restaurant> x, int i, int j) {
+		Restaurant t = x.get(i-1);
+		
+		x.set(i - 1, x.get(j - 1));
+		x.set(j - 1, t);
 	}
 
 	public static void main(String[] args) {
 //		// TEST HERE
 //		// After implmentation, create an array of restaurants to test
-//		Restaurant[] res = new Restaurant[9];
-//		res[0] = new Restaurant("1", 204, 2, 3, 404, "Rome Road");
-//		res[1] = new Restaurant("2", 204, 2, 3, 404, "Rome Road");
-//		res[2] = new Restaurant("3", 204, 2, 3, 404, "Rome Road");
-//		res[3] = new Restaurant("4", 204, 2, 3, 404, "Rome Road");
-//		res[4] = new Restaurant("5", 204, 2, 3, 404, "Rome Road");
-//		res[5] = new Restaurant("6", 204, 2, 3, 404, "Rome Road");
-//		res[6] = new Restaurant("7", 204, 2, 3, 404, "Rome Road");
-//		res[7] = new Restaurant("8", 204, 2, 3, 404, "Rome Road");
-//		res[8] = new Restaurant("9", 204, 2, 3, 404, "Rome Road");
-//		res[0].setOverallScore(80);
-//		res[1].setOverallScore(40);
-//		res[2].setOverallScore(70);
-//		res[3].setOverallScore(20);
-//		res[4].setOverallScore(50);
-//		res[5].setOverallScore(90);
-//		res[6].setOverallScore(30);
-//		res[7].setOverallScore(60);
-//		res[8].setOverallScore(10);
-//
-//		sortHeap(res, 9);
-//		for (int i = 0; i < 9; i++) {
-//			System.out.println(res[i]);
-//		}
+		ArrayList<Restaurant> res = new ArrayList();
+		Restaurant r1 = new Restaurant(new RestaurantIdentity("123", "123"), 20, 2.0, 3.0,100);
+		Restaurant r2 = new Restaurant(new RestaurantIdentity("456", "456"), 20, 2.0, 3.0,100);
+		Restaurant r3 = new Restaurant(new RestaurantIdentity("789", "789"), 20, 2.0, 3.0,100);
+		r1.setOverallScore(80);
+		r2.setOverallScore(70);
+		r3.setOverallScore(90);
+		res.add(r1);
+		res.add(r2);
+		res.add(r3);
+		sortHeap(res, 3);
+		for (int i = 0; i < 3; i++) {
+			System.out.println(res.get(i));
+		}
 
 	}
 
