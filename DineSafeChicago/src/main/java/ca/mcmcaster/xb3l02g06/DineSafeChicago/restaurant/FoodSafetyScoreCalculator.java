@@ -1,10 +1,10 @@
-package main;
+package ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
-import main.Inspection;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 
 /**
  * This class serves as a calculator for foodSafetyScore of the input restaurant
