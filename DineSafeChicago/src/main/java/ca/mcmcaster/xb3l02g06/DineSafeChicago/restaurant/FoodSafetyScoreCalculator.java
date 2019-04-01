@@ -1,10 +1,10 @@
-package ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant;
+package main;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
-import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
+import main.Inspection;
 
 /**
  * This class serves as a calculator for foodSafetyScore of the input restaurant
@@ -125,3 +125,4 @@ public class FoodSafetyScoreCalculator {
 		}
 		return weightedGrade;
 	}
+}
