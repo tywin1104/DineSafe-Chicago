@@ -123,7 +123,7 @@ public class Restaurant implements Comparable<Restaurant> {
 	}
 
 	public int compareTo(Restaurant other) {
-		return Double.compare(overallScore, other.overallScore);
+		return Double.compare(other.overallScore, overallScore);
 	}
 
 	public RestaurantIdentity getRestaurantIdentity() {
