@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-@Profile("test")
+//@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
@@ -31,35 +32,23 @@ public class DataLoader implements CommandLineRunner {
 	private InspectionRepository inspectionRepo;
 
 	@Autowired
-	private RestaurantRepository restaurantRepo;  
+	private RestaurantRepository restaurantRepo;
 
 	@Override
 	public void run(String... args) throws Exception {
-		test();
+//		test();
 //		loadResInspctions();  
 //		updateFoodSafetyScore();
+		loadCrimes();
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataLoader.class, args);
 	}
-	
-	public void test() {
-		ArrayList<Restaurant> restaurants = (ArrayList<Restaurant>) restaurantRepo.findByClosedFalse();
-		//59 distinct zip codes for all restaurants in total
-		HashTable hashTable = new HashTable(59);  
-		hashTable.loadRestaurants(restaurants);
-		ArrayList<Restaurant> filtered = hashTable.getRestaurants(60606);
-//		System.out.println(filtered.size());
-		for(Restaurant res : filtered) {
-			System.out.println(res.getRestaurantIdentity().getName());
-		}
-	}
-	
-	
+
 	public void updateFoodSafetyScore() {
 		int counter = 0;
-		for(Restaurant restaurant : restaurantRepo.findAll()) {
+		for (Restaurant restaurant : restaurantRepo.findAll()) {
 			counter++;
 //			System.out.println("Updating... " + counter);
 //			System.out.println(FoodSafetyScoreCalculator.calculate(restaurant));
@@ -67,15 +56,14 @@ public class DataLoader implements CommandLineRunner {
 			restaurantRepo.save(restaurant);
 		}
 	}
-	public void loadResInspctions() throws FileNotFoundException {
-		//TODO: out of business -> closed,
 
+	public void loadResInspctions() throws FileNotFoundException {
 		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/InspectionFiltered.csv";
 
 		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 1);
 		List<String[]> allRows;
 		int counter = 0;
-		try { 
+		try {
 			allRows = reader.readAll();
 			for (String[] temp : allRows) {
 				counter++;
@@ -89,15 +77,15 @@ public class DataLoader implements CommandLineRunner {
 				String violation = temp[8];
 				double latitude = Double.parseDouble(temp[9]);
 				double longitude = Double.parseDouble(temp[10]);
-				
+
 				Restaurant restaurant = restaurantRepo.findByRestaurantIdentity(new RestaurantIdentity(address, name));
 				if (restaurant == null) {
 					RestaurantIdentity restaurantIdentity = new RestaurantIdentity(address, name);
-					restaurant = new Restaurant(restaurantIdentity, zip, latitude, longitude, licenseNum); 
+					restaurant = new Restaurant(restaurantIdentity, zip, latitude, longitude, licenseNum);
 				}
 				Inspection inspection = new Inspection(result, violation, dateStr);
-				//Check if that restaurant is closed
-				if(result.equals("Out of Business")) {
+				// Check if that restaurant is closed
+				if (result.equals("Out of Business")) {
 					restaurant.setClosed(true);
 				}
 				restaurant.addInspection(inspection);
@@ -106,6 +94,50 @@ public class DataLoader implements CommandLineRunner {
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void loadCrimes() throws IOException {
+		String fileIn = "/Users/tianyizhang/Desktop/McMaster/CS2XB3/DineSafe-Chicago/DineSafeChicago/src/main/resources/data/CrimeFiltered.csv";
+
+		int counter = 0;
+		for (Restaurant restaurant : restaurantRepo.findByClosedFalse()) {
+			counter++;
+			System.out.println("Processing " + counter);
+
+			double res_latitude = restaurant.getLatitude();
+			double res_longitude = restaurant.getLongitude();
+
+			int high_crime_count = 0;
+			int medium_crime_count = 0;
+			int low_crime_count = 0;
+			double currentCrimeScore = 0;
+
+			CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
+			List<String[]> allRows;
+			allRows = reader.readAll();
+			for (String[] temp : allRows) {
+				String type = temp[1];
+				double latitude = Double.parseDouble(temp[2]);
+				double longitude = Double.parseDouble(temp[3]);
+				if (Math.abs(res_latitude - latitude) <= 0.015 && Math.abs(res_longitude - longitude) <= 0.015) {
+					if (type.equals("HOMICIDE"))
+						high_crime_count++;
+					else if (type.equals("ROBBERY") || type.equals("ASSAULT") || type.equals("KIDNAPPING")
+							|| type.equals("CRIM SEXUAL ASSAULT") || type.equals("HUMAN TRAFFICKING"))
+						medium_crime_count++;
+					else
+						low_crime_count++;
+				}
+			}
+			currentCrimeScore = (high_crime_count * 20) + (medium_crime_count * 5) + (low_crime_count * 1);
+			HashMap<String, Integer> crimesCount = new HashMap<String, Integer>();
+			crimesCount.put("High", high_crime_count);
+			crimesCount.put("Medium", medium_crime_count);
+			crimesCount.put("Low", low_crime_count);
+			restaurant.setCrimesCount(crimesCount);
+			restaurant.setNeighborhoodSafetyScore(currentCrimeScore);
+			restaurantRepo.save(restaurant);
 		}
 	}
 }

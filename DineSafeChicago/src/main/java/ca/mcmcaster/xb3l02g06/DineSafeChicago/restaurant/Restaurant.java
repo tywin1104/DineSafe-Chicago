@@ -1,6 +1,7 @@
 package ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -25,14 +26,16 @@ public class Restaurant implements Comparable<Restaurant> {
 	private double longitude;
 	private double foodSafetyScore;
 	private double neighborhoodSafetyScore;
+	private HashMap<String, Integer> crimesCount;
 	private double overallScore;
 	private boolean closed;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Inspection> inspections;
 
 	protected Restaurant() {
+		this.crimesCount = new HashMap<String, Integer>();
 	}
 
 	public Restaurant(RestaurantIdentity restaurantIdentity, int zip, double latitude, double longitude,
@@ -45,6 +48,13 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.licenseNum = licenseNum;
 		this.foodSafetyScore = 0;
 		this.neighborhoodSafetyScore = 0;
+		this.initCrimeCount();
+	}
+
+	private void initCrimeCount() {
+		crimesCount.put("High", 0);
+		crimesCount.put("Medium", 0);
+		crimesCount.put("Low", 0);
 	}
 
 	public void addInspection(Inspection ins) {
@@ -116,6 +126,14 @@ public class Restaurant implements Comparable<Restaurant> {
 
 	public boolean isClosed() {
 		return closed;
+	}
+
+	public HashMap<String, Integer> getCrimesCount() {
+		return crimesCount;
+	}
+
+	public void setCrimesCount(HashMap<String, Integer> crimesCount) {
+		this.crimesCount = crimesCount;
 	}
 
 	public void setClosed(boolean closed) {
