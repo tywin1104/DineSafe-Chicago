@@ -1,4 +1,4 @@
-package main;
+package ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms;
 
 import java.util.ArrayList;
 
