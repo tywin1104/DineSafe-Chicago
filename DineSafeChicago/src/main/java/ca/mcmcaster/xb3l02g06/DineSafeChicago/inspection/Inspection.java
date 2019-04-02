@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
+import net.bytebuddy.asm.Advice.This;
 
 @Entity
 public class Inspection {
@@ -81,7 +82,7 @@ public class Inspection {
 		if(this.violation.isEmpty()) {
 			return 0;
 		}
-		String[] splitViolationStr = this.violation.trim().split("\\s+");
+		String[] splitViolationStr = this.violation.trim().split("\\.");
 		return Integer.parseInt(splitViolationStr[0]);
 	}
 
