@@ -18,6 +18,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.algorithms.HashTable;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.Inspection;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.inspection.InspectionRepository;
+import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
 //import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.FoodSafetyScoreCalculator;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
@@ -38,8 +39,8 @@ public class DataLoader implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 //		test();
 //		loadResInspctions();  
-//		updateFoodSafetyScore();
-		loadCrimes();
+		updateFoodSafetyScore();
+//		loadCrimes();
 	}
 
 	public static void main(String[] args) {
@@ -50,9 +51,11 @@ public class DataLoader implements CommandLineRunner {
 		int counter = 0;
 		for (Restaurant restaurant : restaurantRepo.findAll()) {
 			counter++;
-//			System.out.println("Updating... " + counter);
-//			System.out.println(FoodSafetyScoreCalculator.calculate(restaurant));
-//			restaurant.calculateFoodSafetyScore(); 
+			System.out.println("Updating... " + counter);
+			double score = FoodSafetyScoreCalculator.calculate(restaurant);
+			restaurant.setFoodSafetyScore(score);
+			System.out.println(score);
+//			System.out.println(restaurant.getInspections().get(0).getResult());
 			restaurantRepo.save(restaurant);
 		}
 	}
@@ -111,8 +114,9 @@ public class DataLoader implements CommandLineRunner {
 			int high_crime_count = 0;
 			int medium_crime_count = 0;
 			int low_crime_count = 0;
-			double currentCrimeScore = 0;
-
+			double currentCrimeScore = 1000;
+			// TODO: check order of lat and long
+			// TODO:check why some non-closed restaurants have no crime score
 			CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
 			List<String[]> allRows;
 			allRows = reader.readAll();
@@ -121,10 +125,10 @@ public class DataLoader implements CommandLineRunner {
 				double latitude = Double.parseDouble(temp[2]);
 				double longitude = Double.parseDouble(temp[3]);
 				if (Math.abs(res_latitude - latitude) <= 0.015 && Math.abs(res_longitude - longitude) <= 0.015) {
-					if (type.equals("HOMICIDE"))
+					if (type.equals("HOMICIDE") || type.equals("ROBBERY") || type.equals("KIDNAPPING"))
 						high_crime_count++;
-					else if (type.equals("ROBBERY") || type.equals("ASSAULT") || type.equals("KIDNAPPING")
-							|| type.equals("CRIM SEXUAL ASSAULT") || type.equals("HUMAN TRAFFICKING"))
+					else if (type.equals("ASSAULT") || type.equals("CRIM SEXUAL ASSAULT")
+							|| type.equals("HUMAN TRAFFICKING"))
 						medium_crime_count++;
 					else
 						low_crime_count++;
@@ -137,6 +141,9 @@ public class DataLoader implements CommandLineRunner {
 			crimesCount.put("Low", low_crime_count);
 			restaurant.setCrimesCount(crimesCount);
 			restaurant.setNeighborhoodSafetyScore(currentCrimeScore);
+
+			// TODO: normalize score.
+			// TODO:Save restaurant overall score
 			restaurantRepo.save(restaurant);
 		}
 	}

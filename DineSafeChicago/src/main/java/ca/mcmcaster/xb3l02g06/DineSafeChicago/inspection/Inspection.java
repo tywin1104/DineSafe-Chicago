@@ -87,9 +87,9 @@ public class Inspection {
 
 	public int CalcInspectionScore() {
 		int inspectionScore = 0;
-		if (this.getResult() == "Pass") {
+		if (this.getResult().equals("Pass")) {
 			inspectionScore = 100;
-		} else if (this.getResult() == "Pass w/ Conditions") {
+		} else if (this.getResult().equals("Pass w/ Conditions")) {
 			int condition = this.getViolationNumber();
 			if (condition <= 14) {
 				inspectionScore = 50;

@@ -91,8 +91,8 @@ public class FoodSafetyScoreCalculator {
 		cal.add(Calendar.YEAR,-1);
 		Date lastYear = cal.getTime();
 		return latestInspection.getTime().after(lastYear);
-	}
-
+	} 
+	
 	/**
 	 * calculate the pass rate (including pass and conditional pass) of the restaurant calculated by numbers of passes divided by total number of inspections
 	 * @param array - an array of inspections
@@ -101,7 +101,7 @@ public class FoodSafetyScoreCalculator {
 	private static double passRate(List<Inspection> array) {
 		int pass = 0;
 		for (int i = 0; i < array.size(); i++) {
-			if (array.get(i).getResult() == "Pass" || array.get(i).getResult() == "Pass w/ Conditions") {
+			if (array.get(i).getResult().equals("Pass") || array.get(i).getResult().equals("Pass w/ Conditions")) {
 				pass++;
 			}
 		}
