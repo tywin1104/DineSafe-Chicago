@@ -39,8 +39,9 @@ public class DataLoader implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 //		test();
 //		loadResInspctions();  
-		updateFoodSafetyScore();
+//		updateFoodSafetyScore();
 //		loadCrimes();
+		updateOverallScore();
 	}
 
 	public static void main(String[] args) {
@@ -141,9 +142,18 @@ public class DataLoader implements CommandLineRunner {
 			crimesCount.put("Low", low_crime_count);
 			restaurant.setCrimesCount(crimesCount);
 			restaurant.setNeighborhoodSafetyScore(currentCrimeScore);
+		}
+	}
 
-			// TODO: normalize score.
-			// TODO:Save restaurant overall score
+	public void updateOverallScore() {
+		int counter = 0;
+		for (Restaurant restaurant : restaurantRepo.findByClosedFalse()) {
+			counter++;
+			System.out.println("Processing " + counter);
+			double crime_deduction = (double)(restaurant.getNeighborhoodSafetyScore()/2821 * 50);
+			double normalizedScore = ((restaurant.getFoodSafetyScore() * 0.5) - crime_deduction) + 50;
+			restaurant.setOverallScore(normalizedScore);
+//			System.out.println(normalizedScore);
 			restaurantRepo.save(restaurant);
 		}
 	}
