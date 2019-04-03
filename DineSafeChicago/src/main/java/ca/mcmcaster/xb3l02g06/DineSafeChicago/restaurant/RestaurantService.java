@@ -23,7 +23,10 @@ public class RestaurantService {
 		hashTable.loadRestaurants(restaurants);
 		ArrayList<Restaurant> filtered = hashTable.getRestaurants(zip);
 		HeapSort.sortHeap(filtered, filtered.size());
-		return filtered;
+		if(filtered.size() < 10)
+			return filtered;
+		else
+			return new ArrayList<Restaurant>(filtered.subList(0, 10));
 	}
 
 	public Restaurant getRestaurantByLicenseNumber(int licenseNum) {
@@ -32,7 +35,7 @@ public class RestaurantService {
 		for (Restaurant restaurant : restaurants) {
 			bst.put(restaurant.getLicenseNum(), restaurant);
 		}
-		return bst.get(licenseNum);
+		return bst.get(licenseNum); 
 	}
 
 }

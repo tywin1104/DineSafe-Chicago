@@ -25,7 +25,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantIdentity;
 import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.RestaurantRepository;
 
 @SpringBootApplication
-//@Profile("test")
+@Profile("test")
 @ComponentScan(basePackages = { "ca.mcmcaster.xb3l02g06.DineSafeChicago" })
 public class DataLoader implements CommandLineRunner {
 
@@ -41,7 +41,8 @@ public class DataLoader implements CommandLineRunner {
 //		loadResInspctions();  
 //		updateFoodSafetyScore();
 //		loadCrimes();
-		updateOverallScore();
+//		updateOverallScore();
+//		checkPassRate();
 	}
 
 	public static void main(String[] args) {
@@ -156,5 +157,6 @@ public class DataLoader implements CommandLineRunner {
 //			System.out.println(normalizedScore);
 			restaurantRepo.save(restaurant);
 		}
-	}
+	} 
+	
 }
