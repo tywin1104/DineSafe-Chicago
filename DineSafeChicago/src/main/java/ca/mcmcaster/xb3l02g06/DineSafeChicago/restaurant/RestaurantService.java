@@ -36,6 +36,5 @@ public class RestaurantService {
 			bst.put(restaurant.getLicenseNum(), restaurant);
 		}
 		return bst.get(licenseNum); 
-	}
-
+	}		
 }

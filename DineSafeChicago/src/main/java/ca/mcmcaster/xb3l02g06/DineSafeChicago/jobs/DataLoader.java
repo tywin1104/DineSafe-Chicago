@@ -37,14 +37,9 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-//		test();
-//		loadResInspctions();  
-//		updateFoodSafetyScore();
-//		loadCrimes();
-//		updateOverallScore();
-//		checkPassRate();
+		//
 	}
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DataLoader.class, args);
 	}
@@ -57,7 +52,6 @@ public class DataLoader implements CommandLineRunner {
 			double score = FoodSafetyScoreCalculator.calculate(restaurant);
 			restaurant.setFoodSafetyScore(score);
 			System.out.println(score);
-//			System.out.println(restaurant.getInspections().get(0).getResult());
 			restaurantRepo.save(restaurant);
 		}
 	}
@@ -117,8 +111,7 @@ public class DataLoader implements CommandLineRunner {
 			int medium_crime_count = 0;
 			int low_crime_count = 0;
 			double currentCrimeScore = 1000;
-			// TODO: check order of lat and long
-			// TODO:check why some non-closed restaurants have no crime score
+
 			CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
 			List<String[]> allRows;
 			allRows = reader.readAll();
@@ -151,12 +144,11 @@ public class DataLoader implements CommandLineRunner {
 		for (Restaurant restaurant : restaurantRepo.findByClosedFalse()) {
 			counter++;
 			System.out.println("Processing " + counter);
-			double crime_deduction = (double)(restaurant.getNeighborhoodSafetyScore()/2821 * 50);
+			double crime_deduction = (double) (restaurant.getNeighborhoodSafetyScore() / 2821 * 50);
 			double normalizedScore = ((restaurant.getFoodSafetyScore() * 0.5) - crime_deduction) + 50;
 			restaurant.setOverallScore(normalizedScore);
-//			System.out.println(normalizedScore);
 			restaurantRepo.save(restaurant);
 		}
-	} 
-	
+	}
+
 }

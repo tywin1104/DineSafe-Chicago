@@ -125,27 +125,4 @@ public class BST<Key extends Comparable<Key>, Value> {
 		x.size = 1 + size(x.left) + size(x.right);
 		return x;
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		BST<Integer, Restaurant> st = new BST<Integer, Restaurant>();
-
-		Restaurant r1 = new Restaurant(new RestaurantIdentity("123", "123"), 20, 2.0, 3.0, 100);
-		Restaurant r2 = new Restaurant(new RestaurantIdentity("456", "456"), 20, 2.0, 3.0, 110);
-		Restaurant r3 = new Restaurant(new RestaurantIdentity("789", "789"), 20, 2.0, 3.0, 120);
-		Restaurant r4 = new Restaurant(new RestaurantIdentity("zyl", "zyl"), 20, 2.0, 3.0, 130);
-		r1.setOverallScore(80);
-		r2.setOverallScore(70);
-		r3.setOverallScore(70);
-		r4.setOverallScore(20);
-
-		st.put(100, r1);
-		st.put(110, r2);
-		st.put(120, r3);
-		st.put(130, r4);
-
-		System.out.print(st.get(110));
-
-	}
-
 }

@@ -52,24 +52,4 @@ public class HeapSort {
 		x.set(i - 1, x.get(j - 1));
 		x.set(j - 1, t);
 	}
-
-	public static void main(String[] args) {
-//		// TEST HERE
-//		// After implmentation, create an array of restaurants to test
-		ArrayList<Restaurant> res = new ArrayList();
-		Restaurant r1 = new Restaurant(new RestaurantIdentity("123", "123"), 20, 2.0, 3.0, 100);
-		Restaurant r2 = new Restaurant(new RestaurantIdentity("456", "456"), 20, 2.0, 3.0, 100);
-		Restaurant r3 = new Restaurant(new RestaurantIdentity("789", "789"), 20, 2.0, 3.0, 100);
-		r1.setOverallScore(80);
-		r2.setOverallScore(70);
-		r3.setOverallScore(90);
-		res.add(r1);
-		res.add(r2);
-		res.add(r3);
-		sortHeap(res, 3);
-		for (int i = 0; i < 3; i++) {
-			System.out.println(res.get(i));
-		}
-	}
-
 }
