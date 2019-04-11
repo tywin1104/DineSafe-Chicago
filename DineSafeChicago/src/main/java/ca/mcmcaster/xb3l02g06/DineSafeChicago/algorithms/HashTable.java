@@ -13,7 +13,7 @@ import ca.mcmcaster.xb3l02g06.DineSafeChicago.restaurant.Restaurant;
 public class HashTable {
 
 	private int capacity;
-	private ArrayList<Restaurant>[] st;
+	public ArrayList<Restaurant>[] st;
 
 	/**
 	 * Constructor

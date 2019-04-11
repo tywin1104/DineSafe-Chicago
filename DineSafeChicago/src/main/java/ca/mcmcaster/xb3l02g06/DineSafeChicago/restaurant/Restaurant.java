@@ -34,10 +34,6 @@ public class Restaurant implements Comparable<Restaurant> {
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Inspection> inspections;
 
-	protected Restaurant() {
-		this.crimesCount = new HashMap<String, Integer>();
-	}
-
 	public Restaurant(RestaurantIdentity restaurantIdentity, int zip, double latitude, double longitude,
 			int licenseNum) {
 		this.restaurantIdentity = restaurantIdentity;
@@ -48,6 +44,7 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.licenseNum = licenseNum;
 		this.foodSafetyScore = 0;
 		this.neighborhoodSafetyScore = 0;
+		this.crimesCount = new HashMap<String, Integer>();
 		this.initCrimeCount();
 	}
 

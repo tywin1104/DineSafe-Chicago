@@ -1,4 +1,4 @@
-package ca.mcmcaster.xb3l02g06.DineSafeChicago;
+package unittest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
